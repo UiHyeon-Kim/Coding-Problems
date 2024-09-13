@@ -1,4 +1,4 @@
 fun main() {
     val S = readln().trim().split(" ").filter { it != "" }
-    print(S.size)
+    print(S.count())
 }
