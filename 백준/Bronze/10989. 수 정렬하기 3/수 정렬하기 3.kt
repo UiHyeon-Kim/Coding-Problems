@@ -1,6 +1,11 @@
+import java.io.BufferedReader
+import java.io.BufferedWriter
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+
 fun main() {
-    val br = System.`in`.bufferedReader()
-    val bw = System.`out`.bufferedWriter()
+    val br = BufferedReader(InputStreamReader(System.`in`))
+    val bw = BufferedWriter(OutputStreamWriter(System.out))
 
     val N = br.readLine().toInt()
     val nums = IntArray(10001)
@@ -8,13 +13,11 @@ fun main() {
     for (i in 0 until N) {
         nums[br.readLine().toInt()]++
     }
-
     br.close()
 
     for (i in nums.indices){
         bw.write("$i\n".repeat(nums[i]))
     }
-
     bw.flush()
     bw.close()
 }
