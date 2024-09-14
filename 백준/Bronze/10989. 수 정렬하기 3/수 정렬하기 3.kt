@@ -8,17 +8,10 @@ fun main() {
     val bw = BufferedWriter(OutputStreamWriter(System.out))
 
     val N = br.readLine().toInt()
-    val nums = IntArray(N) { br.readLine().toInt() }
-
+    val score = IntArray(N) { br.readLine().toInt() }
+    score.sort()
     br.close()
-
-    nums.sort()
-
-    for (i in 0 until N) {
-        bw.write(nums[i].toString())
-        bw.newLine()
-    }
-
+    score.forEach { bw.write("$it\n") }
     bw.flush()
     bw.close()
 }
