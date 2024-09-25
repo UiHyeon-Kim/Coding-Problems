@@ -10,6 +10,8 @@ fun main() {
         val command = br.readLine()
 
         when {
+            command.startsWith("push") ->
+                q.add(command.split(" ")[1].toInt())
             command == ("pop") -> {
                 sb.append(q.poll() ?: -1).append("\n")
             }
@@ -25,9 +27,7 @@ fun main() {
             command == ("back") -> {
                 sb.append(q.lastOrNull() ?: -1).append("\n")
             }
-            else -> q.add(command.split(" ")[1].toInt())
         }
     }
-    br.close()
-    println(sb.toString())
+    print(sb.toString())
 }
