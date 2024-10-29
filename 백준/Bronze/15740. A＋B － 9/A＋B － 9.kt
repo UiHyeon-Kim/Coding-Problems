@@ -1,1 +1,1 @@
-fun main() = readln().split(" ").map { it.toInt() }.let { println(it.sum()) }
+fun main() = readln().split(" ").map { it.toLong() }.let { println(it.sum()) }
