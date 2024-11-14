@@ -9,7 +9,7 @@ fun main() {
         result += nums[i]
     }
 
-    if (nums.size == count * 2) println("INVALID")
+    if (nums.size <= count * 2) println("INVALID")
     else if (result > 0) println("APPROVED")
     else println("REJECTED")
 }
