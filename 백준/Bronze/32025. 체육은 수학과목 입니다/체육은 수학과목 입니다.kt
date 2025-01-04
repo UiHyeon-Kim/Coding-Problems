@@ -1,0 +1,1 @@
+fun main() = println(minOf(readln().toInt(), readln().toInt()) * 100 / 2)
