@@ -1,14 +1,35 @@
+import java.util.*
+
 fun main() {
     val n = readln().toInt()
-    val dp = IntArray(n + 1) { Int.MAX_VALUE }
 
-    dp[1] = 0
+    println(bfs(n))
+}
 
-    for (i in 2..n) {
-        dp[i] = dp[i - 1] + 1
-        if (i % 3 == 0) dp[i] = minOf(dp[i], dp[i / 3] + 1)
-        if (i % 2 == 0) dp[i] = minOf(dp[i], dp[i / 2] + 1)
+fun bfs(n: Int): Int {
+    val visited = BooleanArray(n + 1)
+    val q = ArrayDeque<Pair<Int, Int>>()
+
+    q.offer(n to 0)
+    visited[n] = true
+
+    while (q.isNotEmpty()) {
+        val (num, cnt) = q.poll()
+
+        if (num == 1) return cnt
+
+        if (num % 3 == 0 && !visited[num / 3]) {
+            visited[num / 3] = true
+            q.offer(num / 3 to cnt + 1)
+        }
+        if (num % 2 == 0 && !visited[num / 2]) {
+            visited[num / 2] = true
+            q.offer(num / 2 to cnt + 1)
+        }
+        if (num > 1 && !visited[num - 1]) {
+            visited[num - 1] = true
+            q.offer(num - 1 to cnt + 1)
+        }
     }
-
-    println(dp[n])
+    return -1
 }
