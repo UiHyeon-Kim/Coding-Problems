@@ -1,0 +1,1 @@
+fun main() = println(readln().toBigInteger(10).toString(9))
