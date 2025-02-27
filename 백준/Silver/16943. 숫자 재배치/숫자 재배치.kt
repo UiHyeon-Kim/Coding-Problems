@@ -1,37 +1,24 @@
 fun main() {
-    val (a, b) = readln().split(" ")
-    var maxNum = 0
-    val current = mutableListOf<Int>()
-    val visited = BooleanArray(a.length)
+    val (a, b) = readln().split(" ").map { it.toInt() }
+    val aDigits = a.toString().toCharArray().sortedDescending() // A의 숫자들을 내림차순 정렬
+    val bStr = b.toString()
+    val used = BooleanArray(aDigits.size) // 사용 여부 체크
+    var result = -1
 
-    if (a.length > b.length || a.all { it.code > b.first().code }) {
-        println(-1)
-        return
+    fun backtrack(current: String) {
+        if (current.length == aDigits.size) {
+            val num = current.toInt()
+            if (num < b) result = maxOf(result, num)
+            return
+        }
+        for (i in aDigits.indices) {
+            if (used[i] || (current.isEmpty() && aDigits[i] == '0')) continue
+            used[i] = true
+            backtrack(current + aDigits[i])
+            used[i] = false
+        }
     }
 
-    fun findMaxNum(depth: Int): Int {
-        if (depth == a.length) {
-            val currentNum = current.joinToString("").toInt()
-            if (currentNum <= b.toInt()) {
-                maxNum = maxOf(maxNum, currentNum)
-            }
-            return maxNum
-        }
-
-        for (i in a.indices) {
-            if (current.size == 0 && a[i] == '0') continue
-            if (!visited[i]) {
-                current.add(a[i].toString().toInt())
-                visited[i] = true
-                findMaxNum(depth + 1)
-                current.removeLast()
-                visited[i] = false
-            }
-        }
-
-        return -1
-    }
-
-    findMaxNum(0)
-    println(if (maxNum != 0) maxNum else -1)
+    backtrack("")
+    println(result)
 }
