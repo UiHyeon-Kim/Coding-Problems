@@ -11,4 +11,12 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 |  |
 | ------- |
 | [0020-valid-parentheses](https://github.com/UiHyeon-Kim/BaekjoonStudy/tree/master/0020-valid-parentheses) |
+## Linked List
+|  |
+| ------- |
+| [0206-reverse-linked-list](https://github.com/UiHyeon-Kim/BaekjoonStudy/tree/master/0206-reverse-linked-list) |
+## Recursion
+|  |
+| ------- |
+| [0206-reverse-linked-list](https://github.com/UiHyeon-Kim/BaekjoonStudy/tree/master/0206-reverse-linked-list) |
 <!---LeetCode Topics End-->
