@@ -3,7 +3,7 @@ class Solution {
         var answer = mutableSetOf<Int>()
         
         for (i in numbers.indices) {
-            for (j in numbers.indices) {
+            for (j in i..numbers.size - 1) {
                 if (i != j) answer.add(numbers[i] + numbers[j])
             }
         }
