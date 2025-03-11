@@ -1,0 +1,1 @@
+fun main() = readln().toInt().let { println(if (it % 5 != 0) it / 5 + 1 else it / 5) }
