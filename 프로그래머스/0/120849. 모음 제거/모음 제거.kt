@@ -1,11 +1,3 @@
 class Solution {
-    fun solution(my_string: String): String {
-        var answer = StringBuilder()
-        
-        my_string.forEach {
-            if (it !in listOf('a', 'e', 'i', 'o', 'u')) answer.append(it)
-        }
-        
-        return answer.toString()
-    }
+    fun solution(my_string: String) = my_string.filter { !"aeiou".contains(it) }
 }
