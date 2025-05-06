@@ -1,22 +1,17 @@
-import java.util.*
+import java.util.Collections
+import java.util.PriorityQueue
 
 fun main() {
     val n = readln().toInt()
-    val nums = PriorityQueue<Int>()
+    val pq = PriorityQueue<Int>(Collections.reverseOrder())
 
-    nums.addAll(readln().split(" ").map { it.toInt() })
-
-    repeat(n - 1) {
+    repeat(n) {
         val input = readln().split(" ").map { it.toInt() }
-
-        input.forEach { i ->
-            if (nums.peek() < i) {
-                nums.poll()
-                nums.add(i)
-            }
-        }
+        pq.addAll(input)
     }
 
-    println(nums.peek())
-
+    repeat(n-1) {
+        pq.poll()
+    }
+    println(pq.poll())
 }
