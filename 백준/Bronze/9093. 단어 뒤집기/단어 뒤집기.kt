@@ -1,6 +1,5 @@
 fun main() {
     repeat(readln().toInt()) {
-        val str = readln().split(" ").map { it.reversed() }
-        println(str.joinToString(" "))
+        println(readln().split(" ").joinToString(" ") { it.reversed() })
     }
 }
