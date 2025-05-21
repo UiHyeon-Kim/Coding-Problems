@@ -1,10 +1,8 @@
 fun main() {
-    val n = readln()
+    readln()
     val cards = readln().split(" ").map { it.toInt() }.toSet()
-    val m = readln()
+    readln()
     val search = readln().split(" ").map { it.toInt() }
 
-    val result = search.map { if (it in cards) 1 else 0 }
-
-    println(result.joinToString("\n"))
+    println(search.joinToString("\n") { if (it in cards) "1" else "0" })
 }
