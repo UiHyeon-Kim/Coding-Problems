@@ -1,27 +1,51 @@
-fun dfs(node: Int, network: List<MutableList<Int>>, visited: BooleanArray): Int {
-    visited[node] = true
-    var cnt = 0
+fun main() {
+    val computerCnt = readln().toInt()
+    val graph = Array(computerCnt + 1) { mutableListOf<Int>() }
 
-    for (i in network[node]) {
-        if (!visited[i]) {
-            cnt++
-            cnt += dfs(i, network, visited)
+    repeat(readln().toInt()) {
+        val (a, b) = readln().split(" ").map { it.toInt() }
+        graph[a].add(b)
+        graph[b].add(a)
+    }
+
+    val dfsVisited = BooleanArray(computerCnt + 1)
+    var dfsCnt = 0
+    fun dfs(node: Int) {
+        val current = graph[node]
+        dfsVisited[node] = true
+
+        for (i in current) {
+            if (!dfsVisited[i]){
+                dfsCnt++
+                dfs(i)
+            }
         }
     }
-    return cnt
-}
 
-fun main() {
-    val computer = readln().toInt()
-    val linkedCom = readln().toInt()
-    val network = List(computer + 1) { mutableListOf<Int>() }
-    val visited = BooleanArray(computer + 1)
+    var bfsCnt = 0
+    fun bfs(start: Int) {
+        val queue = ArrayDeque<Int>()
+        val bfsVisited = BooleanArray(computerCnt + 1)
 
-    repeat(linkedCom) {
-        val com = readln().split(" ").map { it.toInt() }
-        network[com[0]].add(com[1])
-        network[com[1]].add(com[0])
+        queue.add(start)
+        bfsVisited[start] = true
+
+        while (queue.isNotEmpty()) {
+            val node = queue.removeLast()
+
+            for (i in graph[node]) {
+                if (!bfsVisited[i]) {
+                    queue.add(i)
+                    bfsVisited[i] = true
+                    bfsCnt++
+                }
+            }
+        }
     }
 
-    println(dfs(1, network, visited))
+    dfs(1)
+    println(dfsCnt)
+
+//    bfs(1)
+//    println(bfsCnt)
 }
