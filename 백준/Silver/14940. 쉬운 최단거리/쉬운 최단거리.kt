@@ -1,41 +1,41 @@
-import java.util.*
+fun main() {
+    val (vertical, horizontal) = readln().split(" ").map { it.toInt() }
+    val map = Array(vertical) { readln().split(" ").map { it.toInt() } }
+    val resultMap = Array(vertical) { IntArray(horizontal) { -1 } }
+    val dx = listOf(-1, 1, 0, 0)
+    val dy = listOf(0, 0, -1, 1)
+    var start = 0 to 0
 
-fun bfs(grid: Array<IntArray>, dist: Array<IntArray>, start: Pair<Int, Int>, n: Int, m: Int): Array<IntArray> {
-    val queue: Queue<Pair<Int, Int>> = LinkedList()
-    val direction = arrayOf(-1 to 0, 1 to 0, 0 to -1, 0 to 1)
+    for (i in 0..<vertical) {
+        for (j in 0..<horizontal) {
+            if (map[i][j] == 2) start = i to j
+            if (map[i][j] != 1) resultMap[i][j] = 0
+        }
+    }
 
-    queue.add(start)
-    dist[start.first][start.second] = 0
+    fun bfs(start: Pair<Int, Int>) {
+        val q = ArrayDeque<Pair<Int, Int>>()
 
-    while (queue.isNotEmpty()) {
-        val (x, y) = queue.poll()
-        for ((dx, dy) in direction) {
-            val nx = x + dx
-            val ny = y + dy
+        q.add(start)
 
-            if (nx in 0..<n && ny in 0..<m && grid[nx][ny] == 1 && dist[nx][ny] == -1) {
-                queue.add(nx to ny)
-                dist[nx][ny] = dist[x][y] + 1
+        while (q.isNotEmpty()) {
+            val (cx, cy) = q.removeFirst()
+
+            for (i in 0..<4) {
+                val nx = cx + dx[i]
+                val ny = cy + dy[i]
+
+                if (nx in 0..<vertical && ny in 0..<horizontal && map[nx][ny] == 1 && resultMap[nx][ny] == -1) {
+                    q.add(nx to ny)
+                    resultMap[nx][ny] = resultMap[cx][cy] + 1
+                }
             }
         }
     }
-    return dist
-}
 
-fun main() {
-    val (n, m) = readln().split(" ").map { it.toInt() }
-    val grid = Array(n) { readln().split(" ").map { it.toInt() }.toIntArray() }
-    val dist = Array(n) { IntArray(m) }
-    var start: Pair<Int, Int>? = null
+    bfs(start)
 
-    for (x in 0..<n) {
-        for (y in 0..<m) {
-            if (grid[x][y] == 2) start = x to y
-            if (grid[x][y] == 1) dist[x][y] = -1 else dist[x][y] = 0
-        }
+    resultMap.forEach { row ->
+        println(row.joinToString(" "))
     }
-
-    val result = bfs(grid, dist, start!!, n, m)
-
-    result.forEach { println(it.joinToString(" ")) }
 }
