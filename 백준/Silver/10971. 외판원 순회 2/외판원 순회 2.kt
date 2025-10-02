@@ -5,6 +5,7 @@ fun main() {
     var result = Int.MAX_VALUE
 
     fun backtrack(cost: Int, city: Int, count: Int) {
+        if (cost >= result) return
         if (count == n) {
             if (routes[city][0] > 0) result = minOf(result, cost + routes[city][0])
             return
