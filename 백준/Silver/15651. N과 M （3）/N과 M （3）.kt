@@ -1,21 +1,20 @@
 fun main() {
     val (n, m) = readln().split(" ").map { it.toInt() }
-    val current = mutableListOf<Int>()
-    val sb = StringBuilder()
+    val arr = IntArray(m)
+    val sb = StringBuilder(100_000)
 
-    fun backTrack(depth: Int) {
+    fun backtrack(depth: Int) {
         if (depth == m) {
-            sb.append(current.joinToString(" ")).append("\n")
+            for (i in arr) { sb.append(i).append(' ') }
+            sb.append("\n")
             return
         }
 
         for (i in 1..n) {
-            current.add(i)
-            backTrack(depth + 1)
-            current.removeAt(current.lastIndex)
+            arr[depth] = i
+            backtrack(depth + 1)
         }
     }
-
-    backTrack(0)
+    backtrack(0)
     println(sb)
 }
