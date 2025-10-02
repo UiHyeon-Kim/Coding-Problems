@@ -1,36 +1,27 @@
-import java.lang.StringBuilder
-import java.util.*
+fun main() {
+    val (n, m) = readln().split(" ").map { it.toInt() }
+    val arr = IntArray(m)
+    val visited = BooleanArray(n + 1)
+    val sb = StringBuilder(100_000)
 
-fun main() = with(Scanner(System.`in`)){
-    val n = nextInt()
-    val m = nextInt()
-    val visit = Array(n+1){false} // 방문 여부
-    val arr = Array(m){0} // 수열 결과
-    val sb = StringBuilder()
-
-    fun find(len : Int){
-        if(len == m) {
-            // 문자열 만들기
-            arr.forEach {
-                sb.append(it).append(' ')
+    fun backtrack(depth: Int) {
+        if ((depth) == m) {
+            for (i in arr) {
+                sb.append(i).append(' ')
             }
-            sb.append('\n')
+            sb.append("\n")
             return
         }
 
-        for(i in 1 .. n){
-            // 포함되지 않았다면
-            if(!visit[i]){
-                // 방문 처리
-                visit[i] = true
-                arr[len] = i
-                find(len+1)
-                // 다른 탐색을 위해 false 처리
-                visit[i] = false
-            }
+        for (i in 1..n) {
+            if (visited[i]) continue
+            visited[i] = true
+            arr[depth] = i
+            backtrack(depth + 1)
+            visited[i] = false
         }
     }
 
-    find(0)
-    println(sb) // 한번에 출력
+    backtrack(0)
+    println(sb)
 }
