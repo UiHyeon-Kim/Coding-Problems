@@ -1,11 +1,20 @@
 fun main() {
     val s = readln().toLong()
-    var number = 1
-    var sum = 1L
+    var min = 1L
+    var max = s
+    var answer = 0L
 
-    while (s >= sum) {
-        sum += ++number
+    while (min <= max) {
+        val mid = (max + min) / 2
+        val sum = mid * (mid + 1) / 2
+
+        if (sum <= s) {
+            answer = mid
+            min = mid + 1
+        } else {
+            max = mid - 1
+        }
     }
 
-    println(number - 1)
+    println(answer)
 }
