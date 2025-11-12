@@ -1,35 +1,56 @@
-import java.util.*
+data class Edge(val start: Int, val end: Int, val weight: Int)
 
-data class Edge(val to: Int, val weight: Int)
+class UnionFind(size: Int) {
+    private val parent = IntArray(size + 1) { it }
+    private val rank = IntArray(size + 1) { 0 }
+
+    private fun find(x: Int): Int {
+        if (parent[x] != x) parent[x] = find(parent[x])
+        return parent[x]
+    }
+
+    fun union(x: Int, y: Int): Boolean {
+        val rootX = find(x)
+        val rootY = find(y)
+
+        if (rootX == rootY) return false
+
+        if (rank[rootX] < rank[rootY]) {
+            parent[rootX] = rootY
+        }
+        else if (rank[rootX] > rank[rootY]) {
+            parent[rootY] = rootX
+        }
+        else {
+            parent[rootY] = rootX
+            rank[rootX]++
+        }
+
+        return true
+    }
+}
 
 fun main() {
     val (v, e) = readln().split(" ").map { it.toInt() }
-    val graph = Array(v + 1) { mutableListOf<Edge>() }
+    val edges = mutableListOf<Edge>()
 
     repeat(e) {
         val (start, end, weight) = readln().split(" ").map { it.toInt() }
-        graph[start].add(Edge(end, weight))
-        graph[end].add(Edge(start, weight))
+        edges.add(Edge(start, end, weight))
     }
 
-    val pq = PriorityQueue(compareBy<Edge> { it.weight })
-    val visited = BooleanArray(v + 1)
+    edges.sortBy { it.weight }
+    
+    val uf = UnionFind(v + 1)
     var total = 0
     var count = 0
 
-    pq.add(Edge(1, 0))
+    for (edge in edges) {
+        if (uf.union(edge.start, edge.end)) {
+            total += edge.weight
+            count++
 
-    while (pq.isNotEmpty()) {
-        val (node, weight) = pq.poll()
-        if (visited[node]) continue
-        visited[node] = true
-        total += weight
-        count++
-
-        if (count == v) break
-
-        for (neighbor in graph[node]) {
-            if (!visited[neighbor.to]) pq.add(Edge(neighbor.to, neighbor.weight))
+            if (count == v - 1) break
         }
     }
 
