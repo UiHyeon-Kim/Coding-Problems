@@ -15,6 +15,7 @@ fun main() {
     val pq = PriorityQueue(compareBy<Edge> { it.weight })
     val visited = BooleanArray(v + 1)
     var total = 0
+    var count = 0
 
     pq.add(Edge(1, 0))
 
@@ -23,6 +24,9 @@ fun main() {
         if (visited[node]) continue
         visited[node] = true
         total += weight
+        count++
+
+        if (count == v) break
 
         for (neighbor in graph[node]) {
             if (!visited[neighbor.to]) pq.add(Edge(neighbor.to, neighbor.weight))
