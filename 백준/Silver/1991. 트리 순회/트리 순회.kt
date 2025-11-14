@@ -1,56 +1,58 @@
-data class TreeNode(
-    val node: String,
-    var left: TreeNode? = null,
-    var right: TreeNode? = null
+data class Node(
+    var alphabet: String,
+    var left: Node? = null,
+    var right: Node? = null
 )
 
-fun buildTree(inputs: List<Triple<String, String, String>>): TreeNode? {
-    val nodes = mutableMapOf<String, TreeNode>()
+class Baekjoon1991 {
 
-    for ((parent, left, right) in inputs) {
-        val parentNode = nodes.getOrPut(parent) { TreeNode(parent) }
-        if (left != ".") parentNode.left = nodes.getOrPut(left) { TreeNode(left) }
-        if (right != ".") parentNode.right = nodes.getOrPut(right) { TreeNode(right) }
+    private lateinit var tree: MutableMap<String, Node>
+
+    fun solve() {
+        val n = readln().toInt()
+        tree = mutableMapOf()
+
+        repeat(n) {
+            val (p, l, r) = readln().split(" ")
+
+            val parent = getNode(p)
+            if (l != ".") parent.left = getNode(l)
+            if (r != ".") parent.right = getNode(r)
+        }
+
+        val root = tree["A"]
+
+        preorder(root)
+        println()
+        inorder(root)
+        println()
+        postorder(root)
     }
 
-    return nodes[inputs.first().first]
-}
+    private fun getNode(parent: String): Node = tree.getOrPut(parent) { Node(parent) }
 
-fun preorder(node: TreeNode?) {
-    if (node == null) return
-    print(node.node)
-    preorder(node.left)
-    preorder(node.right)
-}
+    private fun preorder(node: Node?) {
+        if (node == null) return
+        print(node.alphabet)
+        preorder(node.left)
+        preorder(node.right)
+    }
 
-fun inorder(node: TreeNode?) {
-    if (node == null) return
-    inorder(node.left)
-    print(node.node)
-    inorder(node.right)
-}
+    private fun inorder(node: Node?) {
+        if (node == null) return
+        inorder(node.left)
+        print(node.alphabet)
+        inorder(node.right)
+    }
 
-fun postorder(node: TreeNode?) {
-    if (node == null) return
-    postorder(node.left)
-    postorder(node.right)
-    print(node.node)
+    private fun postorder(node: Node?) {
+        if (node == null) return
+        postorder(node.left)
+        postorder(node.right)
+        print(node.alphabet)
+    }
 }
 
 fun main() {
-    val n = readln().toInt()
-    val inputs = mutableListOf<Triple<String, String, String>>()
-
-    repeat(n) {
-        val (parent, left, right) = readln().split(" ")
-        inputs.add(Triple(parent, left, right))
-    }
-
-    val root = buildTree(inputs)
-
-    preorder(root)
-    println()
-    inorder(root)
-    println()
-    postorder(root)
+    Baekjoon1991().solve()
 }
