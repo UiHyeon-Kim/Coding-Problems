@@ -1,42 +1,31 @@
 fun main() {
     val (n, m) = readln().split(" ").map { it.toInt() }
-    val train = Array(n + 1) { IntArray(21) }
+    val trains = IntArray(n)
 
     repeat(m) {
-        val command = readln().split(" ").map { it.toInt() }
+        val ints = readln().split(" ").map { it.toInt() }
+        val (cmd, car) = ints[0] to ints[1] - 1
 
-        when (command[0]) {
+        when (cmd) {
             1 -> {
-                val (car, seat) = command[1] to command[2]
-                train[car][seat] = 1
+                val seat = ints[2] - 1
+                trains[car] = trains[car] or (1 shl seat)
             }
 
             2 -> {
-                val (car, seat) = command[1] to command[2]
-                train[car][seat] = 0
+                val seat = ints[2] - 1
+                trains[car] = trains[car] and (1 shl seat).inv()
             }
 
             3 -> {
-                val car = command[1]
-                for (i in 19 downTo 1) {
-                    train[car][i + 1] = train[car][i]
-                }
-                train[car][1] = 0
+                trains[car] = (trains[car] shl 1) and ((1 shl 20) - 1)
             }
 
             4 -> {
-                val car = command[1]
-                for (i in 2..20) {
-                    train[car][i - 1] = train[car][i]
-                }
-                train[car][20] = 0
+                trains[car] = trains[car] shr 1
             }
         }
     }
 
-    val set = mutableSetOf<String>()
-    for (i in 1..n) {
-        set.add(train[i].joinToString(""))
-    }
-    println(set.size)
+    println(trains.distinct().size)
 }
