@@ -1,31 +1,55 @@
-fun main() {
-    val (n, m) = readln().split(" ").map { it.toInt() }
-    val trains = IntArray(n)
+import java.util.*
 
-    repeat(m) {
-        val ints = readln().split(" ").map { it.toInt() }
-        val (cmd, car) = ints[0] to ints[1] - 1
+class Baekjoon15787 {
 
-        when (cmd) {
-            1 -> {
-                val seat = ints[2] - 1
-                trains[car] = trains[car] or (1 shl seat)
+    private lateinit var train: IntArray
+
+    fun solve() = with(System.`in`.bufferedReader()) {
+        val st = StringTokenizer(readLine())
+        val (trainCount, commandCount) = st.nextToken().toInt() to st.nextToken().toInt()
+        
+        train = IntArray(trainCount)
+
+        repeat(commandCount) {
+            val input = StringTokenizer(readLine())
+            executeCommand(input)
+        }
+
+        println(train.distinct().size)
+    }
+
+    private fun executeCommand(input: StringTokenizer) {
+        val (command, car) = input.nextToken().toInt() to input.nextToken().toInt() - 1
+
+        when (command) {
+            BOARDING -> {
+                val seat = input.nextToken().toInt() - 1
+                train[car] = train[car] or (1 shl seat)
             }
 
-            2 -> {
-                val seat = ints[2] - 1
-                trains[car] = trains[car] and (1 shl seat).inv()
+            STOPOVER -> {
+                val seat = input.nextToken().toInt() - 1
+                train[car] = train[car] and (1 shl seat).inv()
             }
 
-            3 -> {
-                trains[car] = (trains[car] shl 1) and ((1 shl 20) - 1)
+            MOVE_LEFT -> {
+                train[car] = (train[car] shl 1) and ((1 shl 20) - 1)
             }
 
-            4 -> {
-                trains[car] = trains[car] shr 1
+            MOVE_RIGHT -> {
+                train[car] = train[car] shr 1
             }
         }
     }
 
-    println(trains.distinct().size)
+    companion object {
+        private const val BOARDING = 1
+        private const val STOPOVER = 2
+        private const val MOVE_LEFT = 3
+        private const val MOVE_RIGHT = 4
+    }
+}
+
+fun main() {
+    Baekjoon15787().solve()
 }
