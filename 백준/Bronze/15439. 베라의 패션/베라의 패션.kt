@@ -1,0 +1,1 @@
+fun main() = readln().toInt().let { println(it * it - it) }
