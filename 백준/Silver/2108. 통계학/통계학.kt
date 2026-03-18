@@ -1,20 +1,37 @@
 fun main() = with(System.`in`.bufferedReader()) {
     val n = readLine().toInt()
-    val arr = IntArray(n) { readLine().toInt() }.sorted()
+    val sb = StringBuilder()
+    var sum = 0L
+    val count = IntArray(8001)
 
-    val result = arr.sum() / n.toDouble()
+    val arr = IntArray(n) {
+        val num = readLine().toInt()
+        sum += num
+        count[num + 4000]++
+        num
+    }
+    arr.sort()
 
-    println("%.0f".format(result).toInt())
-    println(arr[n / 2])
+    sb.append("%.0f".format(sum.toDouble() / n).toInt()).append("\n")
+    sb.append(arr[n / 2]).append("\n")
 
-    val frequencyMap = mutableMapOf<Int, Int>()
-    for (num in arr) {
-        frequencyMap[num] = frequencyMap.getOrDefault(num, 0) + 1
+    var maxFrequency = 0
+    for (num in count) {
+        if (num > maxFrequency) maxFrequency = num
     }
 
-    val maxValue = frequencyMap.maxBy { it.value }.value
-    val key = frequencyMap.filter { maxValue == it.value }.keys.sorted()
+    var mode = 0
+    var second = false
+    for (i in 0..8000) {
+        if (count[i] == maxFrequency) {
+            mode = i - 4000
+            if (second) break
+            second = true
+        }
+    }
 
-    println(if (key.size > 1) key[1] else key[0])
-    println(arr.last() - arr.first())
+    sb.append(mode).append("\n")
+    sb.append(arr.last() - arr.first())
+
+    println(sb)
 }
