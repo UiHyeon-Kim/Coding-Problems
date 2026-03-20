@@ -1,27 +1,30 @@
-import java.util.PriorityQueue
 import java.util.StringTokenizer
 
 fun main() = with(System.`in`.bufferedReader()) {
     val n = readLine().toInt()
-    val lessons = Array(n) {
+
+    val start = IntArray(n)
+    val end = IntArray(n)
+
+    for (i in 0..<n) {
         val st = StringTokenizer(readLine())
-        Lesson(st.nextToken().toInt(), st.nextToken().toInt())
-    }.apply {
-        sortWith(compareBy({ it.start }, { it.end }))
+        start[i] = st.nextToken().toInt()
+        end[i] = st.nextToken().toInt()
     }
 
-    val pq = PriorityQueue<Int>()
-    pq.add(lessons[0].end)
+    start.sort()
+    end.sort()
 
-    for (idx in 1..<n) {
-        if (pq.peek() <= lessons[idx].start) {
-            pq.poll()
+    var rooms = 0
+    var endIdx = 0
+
+    for (startIdx in 0..<n) {
+        if (start[startIdx] < end[endIdx]) {
+            rooms++
+        } else {
+            endIdx++
         }
-
-        pq.add(lessons[idx].end)
     }
 
-    println(pq.size)
+    println(rooms)
 }
-
-data class Lesson(val start: Int, val end: Int)
