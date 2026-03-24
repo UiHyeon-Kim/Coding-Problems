@@ -1,19 +1,15 @@
 import sys
 input = sys.stdin.readline
 
-def solve():
-    n = int(input())
-    person = list(map(int, input().split()))
+n = input()
+person = list(map(int, input().split()))
 
-    person.sort()
+person.sort()
 
-    sum = 0
-    total = 0
-    for i in person:
-        sum += i
-        total += sum
+sum = 0
+total = 0
+for i in person:
+    sum += i
+    total += sum
 
-    print(total)
-
-if __name__ == '__main__':
-    solve()
+print(total)
