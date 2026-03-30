@@ -1,38 +1,32 @@
-import java.util.PriorityQueue
 import java.util.StringTokenizer
 
 data class Meeting(val start: Int, val end: Int)
 
 class Baekjoon1931 {
 
-    private lateinit var st: StringTokenizer
-
     fun solve() = with(System.`in`.bufferedReader()) {
         val n = readLine().toInt()
-        val pq = PriorityQueue(compareBy<Meeting>({ it.end }, { it.start }))
-
-        repeat(n) {
-            st = StringTokenizer(readLine())
-            pq.add(Meeting(st.nextToken().toInt(), st.nextToken().toInt()))
+        val meetings = Array(n) {
+            val st = StringTokenizer(readLine())
+            Meeting(st.nextToken().toInt(), st.nextToken().toInt())
         }
+        meetings.sortWith(compareBy({ it.end }, { it.start }))
 
-        println(getMaxMeeting(pq))
+        println(getMaxMeeting(meetings))
     }
 
-    private fun getMaxMeeting(pq: PriorityQueue<Meeting>): Int {
-        val meetings = mutableListOf<Meeting>()
+    private fun getMaxMeeting(meetings: Array<Meeting>): Int {
+        var endTime = 0
+        var result = 0
 
-        meetings.add(pq.poll())
-
-        while (pq.isNotEmpty()) {
-            val meeting = pq.poll()
-
-            if (meetings.last().end <= meeting.start) {
-                meetings.add(Meeting(meeting.start, meeting.end))
+        for (meeting in meetings) {
+            if (endTime <= meeting.start) {
+                endTime = meeting.end
+                result++
             }
         }
 
-        return meetings.size
+        return result
     }
 }
 
