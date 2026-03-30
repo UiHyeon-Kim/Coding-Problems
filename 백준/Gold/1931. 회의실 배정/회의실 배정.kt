@@ -1,23 +1,41 @@
-fun main() {
-    val n = readln().toInt()
-    val meetings = mutableListOf<Pair<Int, Int>>()
+import java.util.PriorityQueue
+import java.util.StringTokenizer
 
+data class Meeting(val start: Int, val end: Int)
 
-    repeat(n) {
-        val (start, stop) = readln().split(" ").map { it.toInt() }
-        meetings.add(start to stop)
-    }
+class Baekjoon1931 {
 
-    val sortedMeetings = meetings.sortedWith(compareBy({ it.second }, { it.first }))
-    var result = 0
-    var meetingEnd = 0
-    
-    for ((start, end) in sortedMeetings) {
-        if (start >= meetingEnd) {
-            meetingEnd = end
-            result++
+    private lateinit var st: StringTokenizer
+
+    fun solve() = with(System.`in`.bufferedReader()) {
+        val n = readLine().toInt()
+        val pq = PriorityQueue(compareBy<Meeting>({ it.end }, { it.start }))
+
+        repeat(n) {
+            st = StringTokenizer(readLine())
+            pq.add(Meeting(st.nextToken().toInt(), st.nextToken().toInt()))
         }
+
+        println(getMaxMeeting(pq))
     }
 
-    println(result)
+    private fun getMaxMeeting(pq: PriorityQueue<Meeting>): Int {
+        val meetings = mutableListOf<Meeting>()
+
+        meetings.add(pq.poll())
+
+        while (pq.isNotEmpty()) {
+            val meeting = pq.poll()
+
+            if (meetings.last().end <= meeting.start) {
+                meetings.add(Meeting(meeting.start, meeting.end))
+            }
+        }
+
+        return meetings.size
+    }
+}
+
+fun main() {
+    Baekjoon1931().solve()
 }
