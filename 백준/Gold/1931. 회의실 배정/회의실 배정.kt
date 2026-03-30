@@ -10,7 +10,13 @@ class Baekjoon1931 {
             val st = StringTokenizer(readLine())
             Meeting(st.nextToken().toInt(), st.nextToken().toInt())
         }
-        meetings.sortWith(compareBy({ it.end }, { it.start }))
+        meetings.sortWith(Comparator { m1, m2 ->
+            if (m1.end == m2.end) {
+                m1.start - m2.start
+            } else {
+                m1.end - m2.end
+            }
+        })
 
         println(getMaxMeeting(meetings))
     }
