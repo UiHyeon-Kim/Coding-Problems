@@ -1,62 +1,73 @@
-import kotlin.math.max
+import java.util.StringTokenizer
 
-data class Coordinate(val z: Int, val x: Int, val y: Int)
+data class Coordinates(val row: Int, val col: Int, val height: Int)
+
+class Baekjoon7569 {
+
+    private lateinit var box: Array<Array<IntArray>>
+    private lateinit var dq : ArrayDeque<Coordinates>
+    private val dh = listOf(0, 0, 0, 0, -1, 1)
+    private val dr = listOf(-1, 1, 0, 0, 0, 0)
+    private val dc = listOf(0, 0, -1, 1, 0, 0)
+
+    fun solve() = with(System.`in`.bufferedReader()) {
+        var st = StringTokenizer(readLine())
+        val c = st.nextToken().toInt()
+        val r = st.nextToken().toInt()
+        val h = st.nextToken().toInt()
+
+        dq = ArrayDeque()
+
+        box = Array(h) { ch ->
+            Array(r) { cr ->
+                st = StringTokenizer(readLine())
+                IntArray(c) { cc ->
+                    val current = st.nextToken().toInt()
+                    if (current == 1) dq.add(Coordinates(cr, cc, ch))
+
+                    current
+                }
+            }
+        }
+
+        bfs(r, c, h)
+        println(getMaxDay(r, c, h))
+    }
+
+    private fun bfs(r: Int, c: Int, h: Int) {
+
+        while (dq.isNotEmpty()) {
+            val (cr, cc, ch) = dq.removeFirst()
+
+            for (i in 0..5) {
+                val nr = cr + dr[i]
+                val nc = cc + dc[i]
+                val nh = ch + dh[i]
+
+                if (nr in 0..<r && nc in 0..<c && nh in 0..<h && box[nh][nr][nc] == 0) {
+                    box[nh][nr][nc] = box[ch][cr][cc] + 1
+                    dq.add(Coordinates(nr, nc, nh))
+                }
+            }
+        }
+    }
+
+    private fun getMaxDay(r: Int, c: Int, h: Int): Int {
+        var max = 0
+
+        for (i in 0..<h) {
+            for (j in 0..<r) {
+                for (k in 0..<c) {
+                    if (box[i][j][k] == 0) return -1
+                    if (box[i][j][k] > max) max = box[i][j][k]
+                }
+            }
+        }
+
+        return max - 1
+    }
+}
 
 fun main() {
-    val (row, col, height) = readln().split(" ").map { it.toInt() }
-    val boxes = Array(height) { Array(col) { IntArray(row) } }
-    val dist = Array(height) { Array(col) { IntArray(row) { -1 } } }
-    val q = ArrayDeque<Coordinate>()
-    var result = 0
-
-    val dz = listOf(-1, 1, 0, 0, 0, 0)
-    val dx = listOf(0, 0, -1, 1, 0, 0)
-    val dy = listOf(0, 0, 0, 0, -1, 1)
-
-    repeat(height) { h ->
-        repeat(col) { c ->
-            boxes[h][c] = readln().split(" ").map { it.toInt() }.toIntArray()
-        }
-    }
-
-    for (h in 0 until height) {
-        for (c in 0 until col) {
-            for (r in 0 until row) {
-                if (boxes[h][c][r] == 1) {
-                    dist[h][c][r] = 0
-                    q.add(Coordinate(h, r, c))
-                }
-            }
-        }
-    }
-
-    while (q.isNotEmpty()) {
-        val (cz, cx, cy) = q.removeFirst()
-
-        for (i in dz.indices) {
-            val nz = cz + dz[i]
-            val nx = cx + dx[i]
-            val ny = cy + dy[i]
-
-            if (nz !in 0 until height || nx !in 0 until row || ny !in 0 until col) continue
-            if (boxes[nz][ny][nx] != -1 && dist[nz][ny][nx] == -1) {
-                dist[nz][ny][nx] = dist[cz][cy][cx] + 1
-                q.add(Coordinate(nz, nx, ny))
-            }
-        }
-    }
-
-    for (h in 0 until height) {
-        for (c in 0 until col) {
-            for (r in 0 until row) {
-                if (dist[h][c][r] == -1 && boxes[h][c][r] == 0) {
-                    println(-1)
-                    return
-                }
-                result = max(result, dist[h][c][r])
-            }
-        }
-    }
-
-    println(result)
+    Baekjoon7569().solve()
 }
