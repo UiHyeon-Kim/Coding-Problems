@@ -1,14 +1,14 @@
-import java.util.StringTokenizer
+package `7569 토마토`
 
-data class Coordinates(val row: Int, val col: Int, val height: Int)
+import java.util.StringTokenizer
 
 class Baekjoon7569 {
 
-    private lateinit var box: Array<Array<IntArray>>
-    private lateinit var dq : ArrayDeque<Coordinates>
-    private val dh = listOf(0, 0, 0, 0, -1, 1)
-    private val dr = listOf(-1, 1, 0, 0, 0, 0)
-    private val dc = listOf(0, 0, -1, 1, 0, 0)
+    data class Coordinates(val row: Int, val col: Int, val height: Int)
+
+    private val dh = intArrayOf(0, 0, 0, 0, -1, 1)
+    private val dr = intArrayOf(-1, 1, 0, 0, 0, 0)
+    private val dc = intArrayOf(0, 0, -1, 1, 0, 0)
 
     fun solve() = with(System.`in`.bufferedReader()) {
         var st = StringTokenizer(readLine())
@@ -16,25 +16,29 @@ class Baekjoon7569 {
         val r = st.nextToken().toInt()
         val h = st.nextToken().toInt()
 
-        dq = ArrayDeque()
+        val dq = ArrayDeque<Coordinates>()
 
-        box = Array(h) { ch ->
+        var unripeCount = 0
+
+        val box = Array(h) { ch ->
             Array(r) { cr ->
                 st = StringTokenizer(readLine())
                 IntArray(c) { cc ->
                     val current = st.nextToken().toInt()
                     if (current == 1) dq.add(Coordinates(cr, cc, ch))
+                    else if (current == 0) unripeCount++
 
                     current
                 }
             }
         }
 
-        bfs(r, c, h)
-        println(getMaxDay(r, c, h))
-    }
+        if (unripeCount == 0) {
+            println(0)
+            return@with
+        }
 
-    private fun bfs(r: Int, c: Int, h: Int) {
+        var days = 0
 
         while (dq.isNotEmpty()) {
             val (cr, cc, ch) = dq.removeFirst()
@@ -47,24 +51,18 @@ class Baekjoon7569 {
                 if (nr in 0..<r && nc in 0..<c && nh in 0..<h && box[nh][nr][nc] == 0) {
                     box[nh][nr][nc] = box[ch][cr][cc] + 1
                     dq.add(Coordinates(nr, nc, nh))
-                }
-            }
-        }
-    }
 
-    private fun getMaxDay(r: Int, c: Int, h: Int): Int {
-        var max = 0
-
-        for (i in 0..<h) {
-            for (j in 0..<r) {
-                for (k in 0..<c) {
-                    if (box[i][j][k] == 0) return -1
-                    if (box[i][j][k] > max) max = box[i][j][k]
+                    unripeCount--
+                    days = box[nh][nr][nc] - 1
                 }
             }
         }
 
-        return max - 1
+        if (unripeCount > 0) {
+            println(-1)
+        } else {
+            println(days)
+        }
     }
 }
 
