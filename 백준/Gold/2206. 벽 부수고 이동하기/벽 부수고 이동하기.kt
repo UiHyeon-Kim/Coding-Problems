@@ -34,11 +34,15 @@ fun main() = with(System.`in`.bufferedReader()) {
             val nc = current.c + dc[i]
 
             if (nr in 0..<r && nc in 0..<c) {
-                if (miro[nr][nc] == 0 && !visited[current.broken][nr][nc]) {
-                    visited[current.broken][nr][nc] = true
-                    q.add(Info(nr, nc, current.dist + 1, current.broken))
+                if (miro[nr][nc] == 0) {
+                    if (current.broken == 1 && visited[0][nr][nc]) continue
 
-                } else if (miro[nr][nc] == 1 && current.broken == 0) {
+                    if (!visited[current.broken][nr][nc]) {
+                        visited[current.broken][nr][nc] = true
+                        q.add(Info(nr, nc, current.dist + 1, current.broken))
+                    }
+
+                } else if (miro[nr][nc] == 1 && current.broken == 0 && !visited[1][nr][nc]) {
                     visited[1][nr][nc] = true
                     q.add(Info(nr, nc, current.dist + 1, 1))
                 }
