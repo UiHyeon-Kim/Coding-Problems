@@ -1,58 +1,61 @@
-data class Edge(val start: Int, val end: Int, val weight: Int)
+import java.util.StringTokenizer
 
-class UnionFind(size: Int) {
-    private val parent = IntArray(size + 1) { it }
-    private val rank = IntArray(size + 1) { 0 }
+class Baekjoon1197 {
 
-    private fun find(x: Int): Int {
-        if (parent[x] != x) parent[x] = find(parent[x])
-        return parent[x]
+    data class Edge(val start: Int, val end: Int, val weight: Int)
+
+    private lateinit var edges: MutableList<Edge>
+    private lateinit var parent: IntArray
+
+    fun solve() = with(System.`in`.bufferedReader()) {
+        var st = StringTokenizer(readLine())
+        val V = st.nextToken().toInt()
+        val E = st.nextToken().toInt()
+        edges = mutableListOf()
+
+        repeat(E) {
+            st = StringTokenizer(readLine())
+            val a = st.nextToken().toInt()
+            val b = st.nextToken().toInt()
+            val c = st.nextToken().toInt()
+
+            edges.add(Edge(a, b, c))
+        }
+
+        edges.sortBy { it.weight }
+
+        println(unionFind(V))
     }
 
-    fun union(x: Int, y: Int): Boolean {
-        val rootX = find(x)
-        val rootY = find(y)
+    private fun unionFind(v: Int): Int {
 
-        if (rootX == rootY) return false
+        var sum = 0
+        parent = IntArray(v + 1) { it }
 
-        if (rank[rootX] < rank[rootY]) {
-            parent[rootX] = rootY
-        }
-        else if (rank[rootX] > rank[rootY]) {
-            parent[rootY] = rootX
-        }
-        else {
-            parent[rootY] = rootX
-            rank[rootX]++
+        fun find(x: Int): Int {
+            if (parent[x] == x) return parent[x]
+            parent[x] = find(parent[x])
+            return parent[x]
         }
 
-        return true
+        fun union(edge: Edge) {
+            val rootA = find(edge.start)
+            val rootB = find(edge.end)
+
+            if (rootA != rootB) {
+                parent[rootA] = rootB
+                sum += edge.weight
+            }
+        }
+
+        for (edge in edges) {
+            union(edge)
+        }
+
+        return sum
     }
 }
 
 fun main() {
-    val (v, e) = readln().split(" ").map { it.toInt() }
-    val edges = mutableListOf<Edge>()
-
-    repeat(e) {
-        val (start, end, weight) = readln().split(" ").map { it.toInt() }
-        edges.add(Edge(start, end, weight))
-    }
-
-    edges.sortBy { it.weight }
-    
-    val uf = UnionFind(v + 1)
-    var total = 0
-    var count = 0
-
-    for (edge in edges) {
-        if (uf.union(edge.start, edge.end)) {
-            total += edge.weight
-            count++
-
-            if (count == v - 1) break
-        }
-    }
-
-    println(total)
+    Baekjoon1197().solve()
 }
