@@ -1,0 +1,83 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+class Solution {
+
+    static int[][] board;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int T = Integer.parseInt(br.readLine());
+
+        for (int testCase = 1; testCase <= T; testCase++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+
+            int n = Integer.parseInt(st.nextToken());
+            int m = Integer.parseInt(st.nextToken());
+
+            board = new int[n][n];
+
+            for (int r = 0; r < n; r++) {
+                st = new StringTokenizer(br.readLine());
+
+                for (int c = 0; c < n; c++) {
+                    board[r][c] = Integer.parseInt(st.nextToken());
+                }
+            }
+
+            int maxCount = 0;
+
+            for (int r = 0; r < n; r++) {
+                for (int c = 0; c < n; c++) {
+                    int catchCount = getCatchCount(r, c, n, m);
+                    maxCount = Math.max(maxCount, catchCount);
+                }
+            }
+
+            System.out.println("#" + testCase + " " + maxCount);
+        }
+    }
+
+    private static int getCatchCount(int r, int c, int n, int m) {
+        int plusCount = board[r][c];
+        int crossCount = board[r][c];
+
+        for (int distance = 1; distance < m; distance++) {
+            if (r - distance >= 0) {
+                plusCount += board[r - distance][c];
+            }
+
+            if (r + distance < n) {
+                plusCount += board[r + distance][c];
+            }
+
+            if (c - distance >= 0) {
+                plusCount += board[r][c - distance];
+            }
+
+            if (c + distance < n) {
+                plusCount += board[r][c + distance];
+            }
+
+            if (r - distance >= 0 && c - distance >= 0) {
+                crossCount += board[r - distance][c - distance];
+            }
+
+            if (r - distance >= 0 && c + distance < n) {
+                crossCount += board[r - distance][c + distance];
+            }
+
+            if (r + distance < n && c - distance >= 0) {
+                crossCount += board[r + distance][c - distance];
+            }
+
+            if (r + distance < n && c + distance < n) {
+                crossCount += board[r + distance][c + distance];
+            }
+        }
+
+        return Math.max(plusCount, crossCount);
+    }
+}
